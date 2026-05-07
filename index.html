@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https:; media-src 'self' blob: data: https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+    />
+    <meta
+      name="description"
+      content="ダンス動画を左右反転し、ゆっくり再生して振付を確認できるミラープラクティスアプリ。"
+    />
+    <title>Mirror Practice</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Dance mirror trainer</p>
+          <h1>Mirror Practice</h1>
+        </div>
+        <button id="sourceToggle" class="secondary-button" type="button">読み込み</button>
+      </header>
+
+      <section class="player" aria-label="練習プレイヤー">
+        <div id="dropZone" class="video-shell is-overlay-visible" tabindex="0">
+          <video id="videoPlayer" class="mirror-media is-active" playsinline></video>
+          <div id="youtubePlayer" class="mirror-media">
+            <div id="youtubeFrameHost"></div>
+          </div>
+
+          <div id="youtubeFallback" class="youtube-fallback" hidden>
+            <strong>YouTubeでのみ再生できる動画です</strong>
+            <span>投稿者またはYouTube側の設定により、このページ内での埋め込み再生が制限されています。</span>
+            <a id="youtubeFallbackLink" href="#" target="_blank" rel="noreferrer">YouTubeで開く</a>
+          </div>
+
+          <div id="emptyState" class="empty-state">
+            <strong>動画を読み込んでください</strong>
+            <span>URL、動画ファイル、ドラッグ&ドロップに対応しています。</span>
+          </div>
+
+          <div id="playerOverlay" class="player-overlay">
+            <div class="overlay-top">
+              <span id="modeLabel">Mirror on / Fit</span>
+              <span id="speedLabel">1.00x</span>
+            </div>
+
+            <button id="playPause" class="play-button" type="button" aria-label="再生">▶</button>
+
+            <div class="quick-rail" aria-label="再生中コントロール">
+              <button id="back5" type="button" aria-label="5秒戻る">-5</button>
+              <button id="forward5" type="button" aria-label="5秒進む">+5</button>
+              <button id="restart" type="button" aria-label="最初から">0</button>
+              <button id="focusToggle" type="button" aria-label="フォーカス">◎</button>
+            </div>
+
+            <div class="speed-strip" role="group" aria-label="再生速度">
+              <button class="speed-button" type="button" data-speed="0.25">0.25</button>
+              <button class="speed-button" type="button" data-speed="0.5">0.5</button>
+              <button class="speed-button" type="button" data-speed="0.75">0.75</button>
+              <button class="speed-button is-selected" type="button" data-speed="1">1</button>
+              <button class="speed-button" type="button" data-speed="1.25">1.25</button>
+            </div>
+
+            <div class="timeline" aria-label="再生位置">
+              <input id="progress" type="range" min="0" max="1000" value="0" step="1" />
+              <span id="timeLabel">0:00 / 0:00</span>
+            </div>
+
+            <div class="loop-strip" aria-label="区間ループ">
+              <button id="loopStart" type="button" aria-label="A地点を設定">A</button>
+              <button id="loopEnd" type="button" aria-label="B地点を設定">B</button>
+              <button id="loopToggle" type="button" aria-label="区間ループ">Loop</button>
+              <button id="loopJump" type="button" aria-label="A地点へ移動">↤A</button>
+              <button id="loopClear" type="button" aria-label="区間ループをクリア">Clear</button>
+              <span id="loopLabel">A -- / B --</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sourceSheet" class="source-sheet is-open" aria-label="動画読み込み">
+        <form id="urlForm" class="panel">
+          <div class="panel-head">
+            <label for="videoUrl">動画URL</label>
+            <button id="lastUrlButton" class="text-button" type="button" hidden>前回URL</button>
+          </div>
+          <div class="url-row">
+            <input
+              id="videoUrl"
+              type="url"
+              placeholder="YouTube / Shorts / mp4 / webm"
+              autocomplete="off"
+            />
+            <button type="submit">読み込む</button>
+          </div>
+          <p id="lastSource" class="meta-text"></p>
+        </form>
+
+        <div class="panel">
+          <div class="panel-head">
+            <label for="fileInput">動画ファイル</label>
+            <span id="fileName" class="meta-pill">未選択</span>
+          </div>
+          <input id="fileInput" type="file" accept="video/*" />
+        </div>
+
+        <div class="panel compact-panel">
+          <div class="panel-head">
+            <span>左右反転</span>
+            <label class="switch">
+              <input id="mirrorToggle" type="checkbox" checked />
+              <span></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="panel compact-panel">
+          <div class="panel-head">
+            <span>履歴</span>
+            <button id="clearHistoryButton" class="text-button" type="button">削除</button>
+          </div>
+        </div>
+
+        <p id="status" class="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script src="./app.js?v=no-api-2"></script>
+  </body>
+</html>
